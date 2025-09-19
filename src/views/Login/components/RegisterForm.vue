@@ -16,18 +16,6 @@
         </el-form-item>
       </el-col>
       <el-col :span="24" class="px-10px">
-        <el-form-item v-if="registerData.tenantEnable === 'true'" prop="tenantName">
-          <el-input
-            v-model="registerData.registerForm.tenantName"
-            :placeholder="t('login.tenantname')"
-            :prefix-icon="iconHouse"
-            link
-            type="primary"
-            size="large"
-          />
-        </el-form-item>
-      </el-col>
-      <el-col :span="24" class="px-10px">
         <el-form-item prop="username">
           <el-input
             v-model="registerData.registerForm.username"
@@ -109,7 +97,6 @@ import { LoginStateEnum, useLoginState, useFormValid } from './useLogin'
 defineOptions({ name: 'RegisterForm' })
 
 const { t } = useI18n()
-const iconHouse = useIcon({ icon: 'ep:house' })
 const iconAvatar = useIcon({ icon: 'ep:avatar' })
 const iconLock = useIcon({ icon: 'ep:lock' })
 const formLogin = ref()
@@ -133,10 +120,6 @@ const equalToPassword = (_rule, value, callback) => {
 }
 
 const registerRules = {
-  tenantName: [
-    { required: true, trigger: 'blur', message: '请输入您所属的租户' },
-    { min: 2, max: 20, message: '租户账号长度必须介于 2 和 20 之间', trigger: 'blur' }
-  ],
   username: [
     { required: true, trigger: 'blur', message: '请输入您的账号' },
     { min: 4, max: 30, message: '用户账号长度必须介于 4 和 30 之间', trigger: 'blur' }
@@ -159,11 +142,8 @@ const registerRules = {
 const registerData = reactive({
   isShowPassword: false,
   captchaEnable: import.meta.env.VITE_APP_CAPTCHA_ENABLE,
-  tenantEnable: import.meta.env.VITE_APP_TENANT_ENABLE,
   registerForm: {
-    tenantName: import.meta.env.VITE_APP_DEFAULT_LOGIN_TENANT || '',
     nickname: '',
-    tenantId: 0,
     username: '',
     password: '',
     confirmPassword: '',
@@ -176,11 +156,6 @@ const loading = ref() // ElLoading.service 返回的实例
 const handleRegister = async (params: any) => {
   loading.value = true
   try {
-    if (registerData.tenantEnable) {
-      await getTenantId()
-      registerData.registerForm.tenantId = authUtil.getTenantId()
-    }
-
     if (registerData.captchaEnable) {
       registerData.registerForm.captchaVerification = params.captchaVerification
     }
@@ -230,25 +205,6 @@ const getCode = async () => {
   }
 }
 
-// 获取租户 ID
-const getTenantId = async () => {
-  if (registerData.tenantEnable === 'true') {
-    const res = await LoginApi.getTenantIdByName(registerData.registerForm.tenantName)
-    authUtil.setTenantId(res)
-  }
-}
-
-// 根据域名，获得租户信息
-const getTenantByWebsite = async () => {
-  if (registerData.tenantEnable === 'true') {
-    const website = location.host
-    const res = await LoginApi.getTenantByWebsite(website)
-    if (res) {
-      registerData.registerForm.tenantName = res.name
-      authUtil.setTenantId(res.id)
-    }
-  }
-}
 
 watch(
   () => currentRoute.value,
@@ -259,10 +215,6 @@ watch(
     immediate: true
   }
 )
-onMounted(() => {
-  // getCookie()
-  getTenantByWebsite()
-})
 </script>
 
 <style lang="scss" scoped>

@@ -34,7 +34,6 @@ import { useTagsViewStore } from '@/store/modules/tagsView'
 import { DiyComponentLibrary, PAGE_LIBS } from '@/components/DiyEditor/util' // 商城的 DIY 组件，在 DiyEditor 目录下
 import { toNumber } from 'lodash-es'
 import { isEmpty } from '@/utils/is'
-import { getTenantId } from '@/utils/auth'
 
 /** 装修模板表单 */
 defineOptions({ name: 'DiyTemplateDecorate' })
@@ -70,7 +69,7 @@ const getPageDetail = async (id: any) => {
     formData.value = await DiyTemplateApi.getDiyTemplateProperty(id)
     // 拼接手机预览链接
     const domain = import.meta.env.VITE_MALL_H5_DOMAIN
-    previewUrl.value = `${domain}?templateId=${formData.value.id}&tenantId=${getTenantId()}`
+    previewUrl.value = `${domain}?templateId=${formData.value.id}`
   } finally {
     formLoading.value = false
   }

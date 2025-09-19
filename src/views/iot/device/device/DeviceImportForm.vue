@@ -43,7 +43,7 @@
 
 <script lang="ts" setup>
 import { DeviceApi } from '@/api/iot/device/device'
-import { getAccessToken, getTenantId } from '@/utils/auth'
+import { getAccessToken } from '@/utils/auth'
 import download from '@/utils/download'
 
 defineOptions({ name: 'IoTDeviceImportForm' })
@@ -76,8 +76,7 @@ const submitForm = async () => {
   }
   // 提交请求
   uploadHeaders.value = {
-    Authorization: 'Bearer ' + getAccessToken(),
-    'tenant-id': getTenantId()
+    Authorization: 'Bearer ' + getAccessToken()
   }
   formLoading.value = true
   uploadRef.value!.submit()
