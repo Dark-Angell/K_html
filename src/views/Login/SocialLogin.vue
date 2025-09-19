@@ -185,6 +185,7 @@ const loginData = reactive({
   isShowPassword: false,
   captchaEnable: import.meta.env.VITE_APP_CAPTCHA_ENABLE !== 'false',
   loginForm: {
+    tenantName: '翠微路管理后台源码',
     username: 'admin',
     password: 'admin123',
     captchaVerification: '',
