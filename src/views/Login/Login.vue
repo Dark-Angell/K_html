@@ -15,15 +15,12 @@
         <!-- 左边的背景图 + 欢迎语 -->
         <div class="h-[calc(100%-60px)] flex items-center justify-center">
           <TransitionGroup
-            appear
+            appear  
             enter-active-class="animate__animated animate__bounceInLeft"
             tag="div"
           >
             <img key="1" alt="" class="w-350px" src="@/assets/svgs/login-box-bg.svg" />
             <div key="2" class="text-3xl text-white">{{ t('login.welcome') }}</div>
-            <div key="3" class="mt-5 text-14px font-normal text-white">
-              {{ t('login.message') }}
-            </div>
           </TransitionGroup>
         </div>
       </div>

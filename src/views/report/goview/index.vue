@@ -1,8 +1,6 @@
 <template>
-  <doc-alert title="大屏设计器" url="https://doc.iocoder.cn/report/screen/" />
-
   <ContentWrap :bodyStyle="{ padding: '0px' }" class="!mb-0">
-    <IFrame :src="src" />
+    <div></div>
   </ContentWrap>
 </template>
 <script lang="ts" setup>
