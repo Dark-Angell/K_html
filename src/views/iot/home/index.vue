@@ -166,12 +166,10 @@ import {
 } from '@/api/iot/statistics'
 import { formatDate } from '@/utils/formatTime'
 
-// TODO @super：参考下 /Users/yunai/Java/yudao-ui-admin-vue3/src/views/mall/home/index.vue，拆一拆组件
 
 /** IoT 首页 */
 defineOptions({ name: 'IoTHome' })
 
-// TODO @super：使用下 Echart 组件，参考 yudao-ui-admin-vue3/src/views/mall/home/components/TradeTrendCard.vue 等
 echarts.use([
   TooltipComponent,
   LegendComponent,
