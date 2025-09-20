@@ -1,6 +1,6 @@
 <template>
   <ContentWrap :bodyStyle="{ padding: '0px' }" class="!mb-0">
-    <div></div>
+    <iframe :src="src" width="100%" height="800px" frameborder="0"></iframe>
   </ContentWrap>
 </template>
 <script lang="ts" setup>
