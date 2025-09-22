@@ -58,12 +58,12 @@ $prefix-cls: #{$namespace}-login;
 
 // 科技感背景样式
 .security-login-bg {
-  background: url('@/assets/imgs/安全综合防御效能展现系统.jpg') center/cover no-repeat;
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+  background: url('@/assets/imgs/安全综合防御效能展现系统.jpg') no-repeat;
+  background-size: contain;
+  background-position: center top;
   width: 100%;
-  height: 100%;
+  height: 100vh;
+  min-height: 100vh;
 }
 
 // 登录容器
