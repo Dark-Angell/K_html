@@ -1,20 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <svg version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="12px" height="62px" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient gradientUnits="userSpaceOnUse" x1="6" y1="0" x2="6" y2="62" id="LinearGradient823">
-      <stop id="Stop824" stop-color="#49ecf6" offset="0" />
-      <stop id="Stop825" stop-color="#49ecf6" offset="0.08" />
-      <stop id="Stop826" stop-color="#0081fc" offset="0.37" />
-      <stop id="Stop827" stop-color="#0492f9" offset="0.62" />
-      <stop id="Stop828" stop-color="#18daf1" offset="0.86" />
-      <stop id="Stop829" stop-color="#18daf1" offset="1" />
+    <linearGradient gradientUnits="userSpaceOnUse" x1="6" y1="0" x2="6" y2="62" id="LinearGradient1068">
+      <stop id="Stop1069" stop-color="#49ecf6" offset="0" />
+      <stop id="Stop1070" stop-color="#49ecf6" offset="0.08" />
+      <stop id="Stop1071" stop-color="#0081fc" offset="0.37" />
+      <stop id="Stop1072" stop-color="#0492f9" offset="0.62" />
+      <stop id="Stop1073" stop-color="#18daf1" offset="0.86" />
+      <stop id="Stop1074" stop-color="#18daf1" offset="1" />
     </linearGradient>
-    <mask fill="white" id="clip830">
+    <mask fill="white" id="clip1075">
       <path d="M 0 62  L 0 0  L 11.9999999999999 9.95620437956225  L 11.9999999999999 49.7810218978102  L 0 62  Z " fill-rule="evenodd" />
     </mask>
   </defs>
   <g transform="matrix(1 0 0 1 -156 25 )">
-    <path d="M 0 62  L 0 0  L 11.9999999999999 9.95620437956225  L 11.9999999999999 49.7810218978102  L 0 62  Z " fill-rule="nonzero" fill="url(#LinearGradient823)" stroke="none" transform="matrix(1 0 0 1 156 -25 )" />
-    <path d="M 0 62  L 0 0  L 11.9999999999999 9.95620437956225  L 11.9999999999999 49.7810218978102  L 0 62  Z " stroke-width="2" stroke="#00ccff" fill="none" transform="matrix(1 0 0 1 156 -25 )" mask="url(#clip830)" />
+    <path d="M 0 62  L 0 0  L 11.9999999999999 9.95620437956225  L 11.9999999999999 49.7810218978102  L 0 62  Z " fill-rule="nonzero" fill="url(#LinearGradient1068)" stroke="none" transform="matrix(1 0 0 1 156 -25 )" />
+    <path d="M 0 62  L 0 0  L 11.9999999999999 9.95620437956225  L 11.9999999999999 49.7810218978102  L 0 62  Z " stroke-width="2" stroke="#00ccff" fill="none" transform="matrix(1 0 0 1 156 -25 )" mask="url(#clip1075)" />
   </g>
 </svg>

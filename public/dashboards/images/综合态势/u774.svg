@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <svg version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="10px" height="10px" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient gradientUnits="userSpaceOnUse" x1="10" y1="8" x2="20" y2="18" id="LinearGradient785">
-      <stop id="Stop786" stop-color="#73dbf6" offset="0" />
-      <stop id="Stop787" stop-color="#73dbf6" offset="0.09" />
-      <stop id="Stop788" stop-color="#66ffff" offset="0.5" />
-      <stop id="Stop789" stop-color="#73dbf6" offset="0.91" />
-      <stop id="Stop790" stop-color="#73dbf6" offset="1" />
+    <linearGradient gradientUnits="userSpaceOnUse" x1="10" y1="8" x2="20" y2="18" id="LinearGradient1030">
+      <stop id="Stop1031" stop-color="#73dbf6" offset="0" />
+      <stop id="Stop1032" stop-color="#73dbf6" offset="0.09" />
+      <stop id="Stop1033" stop-color="#66ffff" offset="0.5" />
+      <stop id="Stop1034" stop-color="#73dbf6" offset="0.91" />
+      <stop id="Stop1035" stop-color="#73dbf6" offset="1" />
     </linearGradient>
   </defs>
   <g transform="matrix(1 0 0 1 -10 -8 )">
-    <path d="M 15 8.5  C 17.52 8.5  19.5 10.48  19.5 13  C 19.5 15.52  17.52 17.5  15 17.5  C 12.48 17.5  10.5 15.52  10.5 13  C 10.5 10.48  12.48 8.5  15 8.5  Z " fill-rule="nonzero" fill="url(#LinearGradient785)" stroke="none" />
+    <path d="M 15 8.5  C 17.52 8.5  19.5 10.48  19.5 13  C 19.5 15.52  17.52 17.5  15 17.5  C 12.48 17.5  10.5 15.52  10.5 13  C 10.5 10.48  12.48 8.5  15 8.5  Z " fill-rule="nonzero" fill="url(#LinearGradient1030)" stroke="none" />
   </g>
 </svg>
