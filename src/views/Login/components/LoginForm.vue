@@ -9,51 +9,35 @@
     label-width="120px"
     size="large"
   >
-    <div class="security-form-content">
+    <div class="simple-form-content">
       <!-- 标题：账号登录 -->
-      <div class="security-form-title">
+      <div class="form-title">
         <div class="title-line"></div>
         <span>账号登录</span>
         <div class="title-line"></div>
       </div>
 
       <!-- 账号输入框 -->
-      <el-form-item prop="username" class="security-form-item">
+      <el-form-item prop="username" class="form-item">
         <el-input
           v-model="loginData.loginForm.username"
           placeholder="账号："
           :prefix-icon="iconAvatar"
-          class="security-input"
+          class="transparent-input"
         />
       </el-form-item>
 
       <!-- 密码输入框 -->
-      <el-form-item prop="password" class="security-form-item">
+      <el-form-item prop="password" class="form-item">
         <el-input
           v-model="loginData.loginForm.password"
           placeholder="密码："
           :prefix-icon="iconLock"
           show-password
           type="password"
-          class="security-input"
+          class="transparent-input"
           @keyup.enter="getCode()"
         />
-      </el-form-item>
-
-      <!-- 验证码区域 -->
-      <el-form-item class="security-form-item">
-        <div class="verification-container">
-          <el-input
-            v-if="loginData.captchaEnable === 'false'"
-            placeholder="验证码："
-            class="security-input verification-input"
-          />
-          <div v-else class="captcha-placeholder">
-            <span>验证码：</span>
-            <div class="captcha-code">1234</div>
-            <el-button type="primary" size="small" class="refresh-btn">刷新</el-button>
-          </div>
-        </div>
       </el-form-item>
 
       <!-- 隐藏的滑动验证码 -->
@@ -67,11 +51,11 @@
       />
 
       <!-- 登录按钮 -->
-      <el-form-item class="security-form-item">
+      <el-form-item class="form-item">
         <XButton
           :loading="loginLoading"
           title="登 录"
-          class="security-login-btn"
+          class="login-btn"
           type="primary"
           @click="getCode()"
         />
@@ -236,16 +220,17 @@ onMounted(() => {
   justify-content: center;
 }
 
-.security-form-content {
+.simple-form-content {
   width: 100%;
   max-width: 320px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  padding: 20px;
 }
 
 // 标题样式
-.security-form-title {
+.form-title {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -267,7 +252,7 @@ onMounted(() => {
 }
 
 // 表单项样式
-.security-form-item {
+.form-item {
   margin-bottom: 20px;
 
   :deep(.el-form-item__content) {
@@ -275,14 +260,14 @@ onMounted(() => {
   }
 }
 
-// 输入框样式
-.security-input {
+// 透明输入框样式
+.transparent-input {
   :deep(.el-input__wrapper) {
     background: rgba(64, 158, 255, 0.1);
     border: 1px solid rgba(64, 158, 255, 0.3);
     border-radius: 8px;
     box-shadow: none;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(5px);
     transition: all 0.3s ease;
 
     &:hover {
@@ -302,59 +287,25 @@ onMounted(() => {
     font-size: 14px;
 
     &::placeholder {
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(255, 255, 255, 0.7);
     }
   }
 
   :deep(.el-input__prefix) {
     .el-icon {
-      color: rgba(255, 255, 255, 0.7);
+      color: rgba(255, 255, 255, 0.8);
     }
   }
 
   :deep(.el-input__suffix) {
     .el-icon {
-      color: rgba(255, 255, 255, 0.7);
+      color: rgba(255, 255, 255, 0.8);
     }
   }
 }
 
-// 验证码容器
-.verification-container {
-  width: 100%;
-}
-
-.captcha-placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(64, 158, 255, 0.1);
-  border: 1px solid rgba(64, 158, 255, 0.3);
-  border-radius: 8px;
-  padding: 10px 15px;
-  color: rgba(255, 255, 255, 0.6);
-
-  .captcha-code {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 5px 15px;
-    border-radius: 4px;
-    color: #00d4ff;
-    font-weight: bold;
-    letter-spacing: 2px;
-  }
-
-  .refresh-btn {
-    background: linear-gradient(45deg, #409eff, #00d4ff);
-    border: none;
-    border-radius: 4px;
-    color: white;
-    font-size: 12px;
-    padding: 5px 10px;
-  }
-}
-
 // 登录按钮样式
-.security-login-btn {
+.login-btn {
   width: 100%;
   height: 45px;
   background: linear-gradient(45deg, #409eff, #00d4ff);
@@ -387,17 +338,18 @@ onMounted(() => {
 
 // 响应式设计
 @media (max-width: 768px) {
-  .security-form-content {
+  .simple-form-content {
     max-width: 280px;
     gap: 15px;
+    padding: 15px;
   }
 
-  .security-form-title {
+  .form-title {
     font-size: 14px;
     margin-bottom: 20px;
   }
 
-  .security-login-btn {
+  .login-btn {
     height: 40px;
     font-size: 14px;
   }
