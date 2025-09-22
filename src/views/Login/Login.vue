@@ -1,65 +1,45 @@
 <template>
   <div
     :class="prefixCls"
-    class="relative h-[100%] lt-md:px-10px lt-sm:px-10px lt-xl:px-10px lt-xl:px-10px"
+    class="relative h-[100%] w-full overflow-hidden"
   >
-    <div class="relative mx-auto h-full flex">
-      <div
-        :class="`${prefixCls}__left flex-1 bg-gray-500 bg-opacity-20 relative p-30px lt-xl:hidden overflow-x-hidden overflow-y-auto`"
-      >
-        <!-- 左上角的 logo + 系统标题 -->
-        <div class="relative flex items-center text-white">
-          <img alt="" class="mr-10px h-48px w-48px" src="@/assets/imgs/logo.png" />
-          <span class="text-20px font-bold">{{ underlineToHump(appStore.getTitle) }}</span>
-        </div>
-        <!-- 左边的背景图 + 欢迎语 -->
-        <div class="h-[calc(100%-60px)] flex items-center justify-center">
-          <TransitionGroup
-            appear  
-            enter-active-class="animate__animated animate__bounceInLeft"
-            tag="div"
-          >
-            <img key="1" alt="" class="w-350px" src="@/assets/svgs/login-box-bg.svg" />
-            <div key="2" class="text-3xl text-white">{{ t('login.welcome') }}</div>
-          </TransitionGroup>
-        </div>
+    <!-- 科技感背景 -->
+    <div class="security-login-bg absolute inset-0"></div>
+
+    <!-- 顶部标题 -->
+    <div class="absolute top-0 left-0 right-0 flex justify-center pt-8 z-10">
+      <div class="text-white text-2xl font-bold tracking-wider">
+        安全防护综合业务平台
       </div>
-      <div
-        class="relative flex-1 p-30px dark:bg-[var(--login-bg-color)] lt-sm:p-10px overflow-x-hidden overflow-y-auto"
-      >
-        <!-- 右上角的主题、语言选择 -->
-        <div
-          class="flex items-center justify-between at-2xl:justify-end at-xl:justify-end"
-          style="color: var(--el-text-color-primary);"
-        >
-          <div class="flex items-center at-2xl:hidden at-xl:hidden">
-            <img alt="" class="mr-10px h-48px w-48px" src="@/assets/imgs/logo.png" />
-            <span class="text-20px font-bold" >{{ underlineToHump(appStore.getTitle) }}</span>
-          </div>
-          <div class="flex items-center justify-end space-x-10px h-48px">
-            <ThemeSwitch />
-            <LocaleDropdown />
-          </div>
+    </div>
+
+    <!-- 右上角的主题、语言选择 -->
+    <div class="absolute top-4 right-4 flex items-center space-x-2 z-10">
+      <ThemeSwitch />
+      <LocaleDropdown />
+    </div>
+
+    <!-- 中央六边形登录区域 -->
+    <div class="absolute inset-0 flex items-center justify-center">
+      <div class="hexagon-container relative">
+        <!-- 六边形边框 -->
+        <div class="hexagon-border"></div>
+
+        <!-- 登录表单容器 -->
+        <div class="hexagon-content">
+          <!-- 账号登录 -->
+          <LoginForm class="w-full" />
+          <!-- 手机登录 -->
+          <MobileForm class="w-full" />
+          <!-- 二维码登录 -->
+          <QrCodeForm class="w-full" />
+          <!-- 注册 -->
+          <RegisterForm class="w-full" />
+          <!-- 三方登录 -->
+          <SSOLoginVue class="w-full" />
+          <!-- 忘记密码 -->
+          <ForgetPasswordForm class="w-full" />
         </div>
-        <!-- 右边的登录界面 -->
-        <Transition appear enter-active-class="animate__animated animate__bounceInRight">
-          <div
-            class="m-auto h-[calc(100%-60px)] w-[100%] flex items-center at-2xl:max-w-500px at-lg:max-w-500px at-md:max-w-500px at-xl:max-w-500px"
-          >
-            <!-- 账号登录 -->
-            <LoginForm class="m-auto h-auto p-20px lt-xl:(rounded-3xl light:bg-white)" />
-            <!-- 手机登录 -->
-            <MobileForm class="m-auto h-auto p-20px lt-xl:(rounded-3xl light:bg-white)" />
-            <!-- 二维码登录 -->
-            <QrCodeForm class="m-auto h-auto p-20px lt-xl:(rounded-3xl light:bg-white)" />
-            <!-- 注册 -->
-            <RegisterForm class="m-auto h-auto p-20px lt-xl:(rounded-3xl light:bg-white)" />
-            <!-- 三方登录 -->
-            <SSOLoginVue class="m-auto h-auto p-20px lt-xl:(rounded-3xl light:bg-white)" />
-            <!-- 忘记密码 -->
-            <ForgetPasswordForm class="m-auto h-auto p-20px lt-xl:(rounded-3xl light:bg-white)" />
-          </div>
-        </Transition>
       </div>
     </div>
   </div>
@@ -86,21 +66,107 @@ const prefixCls = getPrefixCls('login')
 $prefix-cls: #{$namespace}-login;
 
 .#{$prefix-cls} {
-  overflow: auto;
+  overflow: hidden;
+}
 
-  &__left {
-    &::before {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: -1;
-      width: 100%;
-      height: 100%;
-      background-image: url('@/assets/svgs/login-bg.svg');
-      background-position: center;
-      background-repeat: no-repeat;
-      content: '';
-    }
+// 科技感背景样式
+.security-login-bg {
+  background: url('@/assets/imgs/安全综合防御效能展现系统.jpg') center/cover no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+// 六边形容器
+.hexagon-container {
+  position: relative;
+  width: 500px;
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// 六边形边框 - 使用CSS clip-path实现六边形
+.hexagon-border {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 450px;
+  height: 450px;
+  background: rgba(64, 158, 255, 0.1);
+  border: 2px solid rgba(64, 158, 255, 0.5);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  backdrop-filter: blur(10px);
+  z-index: 1;
+}
+
+// 六边形内容区域
+.hexagon-content {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  background: rgba(15, 40, 75, 0.8);
+  border-radius: 20px;
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(64, 158, 255, 0.3);
+  z-index: 2;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+// 六边形辉光效果
+.hexagon-border::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  background: linear-gradient(45deg,
+    rgba(64, 158, 255, 0.3),
+    rgba(0, 188, 255, 0.3),
+    rgba(64, 158, 255, 0.3)
+  );
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  z-index: -1;
+  animation: hexagon-glow 3s ease-in-out infinite alternate;
+}
+
+// 六边形发光动画
+@keyframes hexagon-glow {
+  0% {
+    opacity: 0.3;
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 0.8;
+    filter: blur(4px);
+  }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .hexagon-container {
+    width: 350px;
+    height: 350px;
+  }
+
+  .hexagon-border {
+    width: 320px;
+    height: 320px;
+  }
+
+  .hexagon-content {
+    width: 280px;
+    height: 280px;
+    padding: 20px;
   }
 }
 </style>

@@ -4,69 +4,59 @@
     ref="formLogin"
     :model="loginData.loginForm"
     :rules="LoginRules"
-    class="login-form"
+    class="login-form security-login-form"
     label-position="top"
     label-width="120px"
     size="large"
   >
-    <el-row class="mx-[-10px]">
-      <el-col :span="24" class="px-10px">
-        <el-form-item>
-          <LoginFormTitle class="w-full" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="24" class="px-10px">
-        <el-form-item prop="username">
+    <div class="security-form-content">
+      <!-- 标题：账号登录 -->
+      <div class="security-form-title">
+        <div class="title-line"></div>
+        <span>账号登录</span>
+        <div class="title-line"></div>
+      </div>
+
+      <!-- 账号输入框 -->
+      <el-form-item prop="username" class="security-form-item">
+        <el-input
+          v-model="loginData.loginForm.username"
+          placeholder="账号："
+          :prefix-icon="iconAvatar"
+          class="security-input"
+        />
+      </el-form-item>
+
+      <!-- 密码输入框 -->
+      <el-form-item prop="password" class="security-form-item">
+        <el-input
+          v-model="loginData.loginForm.password"
+          placeholder="密码："
+          :prefix-icon="iconLock"
+          show-password
+          type="password"
+          class="security-input"
+          @keyup.enter="getCode()"
+        />
+      </el-form-item>
+
+      <!-- 验证码区域 -->
+      <el-form-item class="security-form-item">
+        <div class="verification-container">
           <el-input
-            v-model="loginData.loginForm.username"
-            :placeholder="t('login.usernamePlaceholder')"
-            :prefix-icon="iconAvatar"
+            v-if="loginData.captchaEnable === 'false'"
+            placeholder="验证码："
+            class="security-input verification-input"
           />
-        </el-form-item>
-      </el-col>
-      <el-col :span="24" class="px-10px">
-        <el-form-item prop="password">
-          <el-input
-            v-model="loginData.loginForm.password"
-            :placeholder="t('login.passwordPlaceholder')"
-            :prefix-icon="iconLock"
-            show-password
-            type="password"
-            @keyup.enter="getCode()"
-          />
-        </el-form-item>
-      </el-col>
-      <el-col :span="24" class="px-10px mt-[-20px] mb-[-20px]">
-        <el-form-item>
-          <el-row justify="space-between" style="width: 100%">
-            <el-col :span="6">
-              <el-checkbox v-model="loginData.loginForm.rememberMe">
-                {{ t('login.remember') }}
-              </el-checkbox>
-            </el-col>
-            <el-col :offset="6" :span="12">
-              <el-link
-                class="float-right"
-                type="primary"
-                @click="setLoginState(LoginStateEnum.RESET_PASSWORD)"
-              >
-                {{ t('login.forgetPassword') }}
-              </el-link>
-            </el-col>
-          </el-row>
-        </el-form-item>
-      </el-col>
-      <el-col :span="24" class="px-10px">
-        <el-form-item>
-          <XButton
-            :loading="loginLoading"
-            :title="t('login.login')"
-            class="w-full"
-            type="primary"
-            @click="getCode()"
-          />
-        </el-form-item>
-      </el-col>
+          <div v-else class="captcha-placeholder">
+            <span>验证码：</span>
+            <div class="captcha-code">1234</div>
+            <el-button type="primary" size="small" class="refresh-btn">刷新</el-button>
+          </div>
+        </div>
+      </el-form-item>
+
+      <!-- 隐藏的滑动验证码 -->
       <Verify
         v-if="loginData.captchaEnable === 'true'"
         ref="verify"
@@ -75,34 +65,18 @@
         mode="pop"
         @success="handleLogin"
       />
-      <el-col :span="24" class="px-10px">
-        <el-form-item>
-          <el-row :gutter="5" justify="space-between" style="width: 100%">
-            <el-col :span="8">
-              <XButton
-                :title="t('login.btnMobile')"
-                class="w-full"
-                @click="setLoginState(LoginStateEnum.MOBILE)"
-              />
-            </el-col>
-            <el-col :span="8">
-              <XButton
-                :title="t('login.btnQRCode')"
-                class="w-full"
-                @click="setLoginState(LoginStateEnum.QR_CODE)"
-              />
-            </el-col>
-            <el-col :span="8">
-              <XButton
-                :title="t('login.btnRegister')"
-                class="w-full"
-                @click="setLoginState(LoginStateEnum.REGISTER)"
-              />
-            </el-col>
-          </el-row>
-        </el-form-item>
-      </el-col>
-    </el-row>
+
+      <!-- 登录按钮 -->
+      <el-form-item class="security-form-item">
+        <XButton
+          :loading="loginLoading"
+          title="登 录"
+          class="security-login-btn"
+          type="primary"
+          @click="getCode()"
+        />
+      </el-form-item>
+    </div>
   </el-form>
 </template>
 <script lang="ts" setup>
@@ -254,23 +228,184 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-:deep(.anticon) {
-  &:hover {
-    color: var(--el-color-primary) !important;
+.security-login-form {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.security-form-content {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+// 标题样式
+.security-form-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+  color: #00d4ff;
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 2px;
+
+  span {
+    margin: 0 15px;
+  }
+
+  .title-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #00d4ff, transparent);
   }
 }
 
-.login-code {
-  float: right;
-  width: 100%;
-  height: 38px;
+// 表单项样式
+.security-form-item {
+  margin-bottom: 20px;
 
-  img {
+  :deep(.el-form-item__content) {
+    margin-left: 0 !important;
+  }
+}
+
+// 输入框样式
+.security-input {
+  :deep(.el-input__wrapper) {
+    background: rgba(64, 158, 255, 0.1);
+    border: 1px solid rgba(64, 158, 255, 0.3);
+    border-radius: 8px;
+    box-shadow: none;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: rgba(64, 158, 255, 0.6);
+      box-shadow: 0 0 10px rgba(64, 158, 255, 0.3);
+    }
+
+    &.is-focus {
+      border-color: #00d4ff;
+      box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+    }
+  }
+
+  :deep(.el-input__inner) {
+    color: #ffffff;
+    background: transparent;
+    font-size: 14px;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+  }
+
+  :deep(.el-input__prefix) {
+    .el-icon {
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+
+  :deep(.el-input__suffix) {
+    .el-icon {
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+}
+
+// 验证码容器
+.verification-container {
+  width: 100%;
+}
+
+.captcha-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(64, 158, 255, 0.1);
+  border: 1px solid rgba(64, 158, 255, 0.3);
+  border-radius: 8px;
+  padding: 10px 15px;
+  color: rgba(255, 255, 255, 0.6);
+
+  .captcha-code {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 5px 15px;
+    border-radius: 4px;
+    color: #00d4ff;
+    font-weight: bold;
+    letter-spacing: 2px;
+  }
+
+  .refresh-btn {
+    background: linear-gradient(45deg, #409eff, #00d4ff);
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+}
+
+// 登录按钮样式
+.security-login-btn {
+  width: 100%;
+  height: 45px;
+  background: linear-gradient(45deg, #409eff, #00d4ff);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(64, 158, 255, 0.3);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(64, 158, 255, 0.5);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  :deep(.el-button) {
+    background: transparent !important;
+    border: none !important;
+    color: white !important;
     width: 100%;
-    height: auto;
-    max-width: 100px;
-    vertical-align: middle;
-    cursor: pointer;
+    height: 100%;
+  }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .security-form-content {
+    max-width: 280px;
+    gap: 15px;
+  }
+
+  .security-form-title {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .security-login-btn {
+    height: 40px;
+    font-size: 14px;
+  }
+}
+
+:deep(.anticon) {
+  &:hover {
+    color: var(--el-color-primary) !important;
   }
 }
 </style>
