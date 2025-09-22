@@ -59,8 +59,8 @@ $prefix-cls: #{$namespace}-login;
 // 科技感背景样式
 .security-login-bg {
   background: url('@/assets/imgs/安全综合防御效能展现系统.jpg') no-repeat;
-  background-size: contain;
-  background-position: center top;
+  background-size: 100% 100%;
+  background-position: center center;
   width: 100%;
   height: 100vh;
   min-height: 100vh;
