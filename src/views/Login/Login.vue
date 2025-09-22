@@ -74,6 +74,7 @@ $prefix-cls: #{$namespace}-login;
   display: flex;
   align-items: center;
   justify-content: center;
+  transform: translateX(-20px);
 }
 </style>
 
