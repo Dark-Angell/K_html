@@ -52,7 +52,7 @@ const selectRule = [
   {
     type: 'inputNumber',
     field: 'multipleLimit',
-    title: '多选时用户最多可以选择的项目数，为 0 则不限制',
+    title: '多选时用户最多可以选择的资源数，为 0 则不限制',
     props: { min: 0 }
   },
   {

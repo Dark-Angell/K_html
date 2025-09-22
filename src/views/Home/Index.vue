@@ -217,7 +217,7 @@ const getCount = async () => {
   totalSate = Object.assign(totalSate, data)
 }
 
-// 获取项目数
+// 获取资源数
 let projects = reactive<Project[]>([])
 const getProject = async () => {
   const data = []
