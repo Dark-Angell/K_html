@@ -20,7 +20,8 @@ defineOptions({ name: 'AttackDashboard' })
 const iframeSrc = ref('/dashboards/网络攻击态势.html')
 const loading = ref(true)
 const wrapperRef = ref<HTMLElement>()
-const scale = ref(1)
+const scaleX = ref(1)
+const scaleY = ref(1)
 
 // 大屏设计尺寸
 const DESIGN_WIDTH = 1920
@@ -40,16 +41,14 @@ const calculateScale = () => {
   const containerWidth = wrapper.clientWidth
   const containerHeight = wrapper.clientHeight
 
-  // 计算缩放比例，保持宽高比
-  const scaleX = containerWidth / DESIGN_WIDTH
-  const scaleY = containerHeight / DESIGN_HEIGHT
-  scale.value = Math.min(scaleX, scaleY)
+  scaleX.value = containerWidth / DESIGN_WIDTH
+  scaleY.value = containerHeight / DESIGN_HEIGHT
 }
 
 const iframeStyle = computed(() => ({
   width: `${DESIGN_WIDTH}px`,
   height: `${DESIGN_HEIGHT}px`,
-  transform: `scale(${scale.value})`,
+  transform: `scale(${scaleX.value}, ${scaleY.value})`,
   transformOrigin: 'top left'
 }))
 
