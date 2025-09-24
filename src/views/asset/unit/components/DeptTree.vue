@@ -1,0 +1,91 @@
+<template>
+  <h1 class="mb-10px">共有多少个单位</h1>
+  <div class="head-container">
+    <el-input v-model="deptName" class="mb-20px" clearable placeholder="请输入">
+      <template #prefix>
+        <Icon icon="ep:search" />
+      </template>
+    </el-input>
+  </div>
+  <div class="head-container">
+    <el-tree
+      ref="treeRef"
+      :data="deptList"
+      :expand-on-click-node="false"
+      :filter-node-method="filterNode"
+      :props="defaultProps"
+      default-expand-all
+      highlight-current
+      node-key="id"
+      @node-click="handleNodeClick"
+    />
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { ElTree } from 'element-plus'
+import * as DeptApi from '@/api/system/dept'
+import * as UnitApi from '@/api/system/unit'
+import { defaultProps, handleTree } from '@/utils/tree'
+import { CACHE_KEY, useCache } from '@/hooks/web/useCache'
+
+defineOptions({ name: 'SystemUserDeptTree' })
+
+const deptName = ref('')
+const deptList = ref<Tree[]>([]) // 树形结构
+const treeRef = ref<InstanceType<typeof ElTree>>()
+const { wsCache } = useCache()
+
+/** 获取单位信息 */
+const userInfo = wsCache.get(CACHE_KEY.USER)
+const id = userInfo?.user.id
+const getUnitOnfo = async () => {
+  const res = await UnitApi.getUnitInfo(id)
+}
+
+/** 获得部门树 */
+const getTree = async () => {
+  const res = await DeptApi.getSimpleDeptList()
+  deptList.value = []
+  deptList.value.push(...handleTree(res))
+}
+
+/** 基于名字过滤 */
+const filterNode = (name: string, data: Tree) => {
+  if (!name) return true
+  return data.name.includes(name)
+}
+
+/** 处理部门被点击 */
+let currentNode: any = {}
+const handleNodeClick = async (row: { [key: string]: any }, treeNode: any) => {
+  // 判断选中状态
+  if (currentNode && currentNode.name === row.name) {
+    treeNode.checked = !treeNode.checked
+  } else {
+    treeNode.checked = true
+  }
+  if (treeNode.checked) {
+    // 选中
+    currentNode = row
+    emits('node-click', row)
+  } else {
+    // 取消选中
+    treeRef.value!.setCurrentKey(undefined)
+    emits('node-click', undefined)
+    currentNode = null
+  }
+}
+const emits = defineEmits(['node-click'])
+
+/** 监听deptName */
+watch(deptName, (val) => {
+  treeRef.value!.filter(val)
+})
+
+/** 初始化 */
+onMounted(async () => {
+  await getTree()
+  await getUnitOnfo()
+})
+</script>

@@ -345,6 +345,29 @@ const remainingRouter: AppRouteRecordRaw[] = [
       }
     ]
   },
+  // 单位资产详情
+  {
+    path: '/unit',
+    component: Layout,
+    name: 'Unit',
+    meta: {
+      hidden: true
+    },
+    children: [
+      {
+        path: '/unit/detail',
+        component: () => import('@/views/asset/unit/components/detail/index.vue'),
+        name: 'UnitDetail',
+        meta: {
+          noCache: true,
+          hidden: true,
+          canTo: true,
+          title: '设备详情',
+          activeMenu: '/unit/detail'
+        },
+      },
+    ]
+  },
   {
     path: '/:pathMatch(.*)*',
     component: () => import('@/views/Error/404.vue'),
