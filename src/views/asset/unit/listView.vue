@@ -12,9 +12,9 @@
           :inline="true"
           label-width="68px"
         >
-          <el-form-item label="单位名称" prop="username">
+          <el-form-item label="单位名称" prop="name">
             <el-input
-              v-model="queryParams.username"
+              v-model="queryParams.name"
               placeholder="请输入单位名称"
               clearable
               @keyup.enter="handleQuery"
@@ -23,7 +23,7 @@
           </el-form-item>
           <el-form-item label="上级单位" prop="status">
             <el-input
-              v-model="queryParams.username"
+              v-model="queryParams.parentId"
               placeholder="请输入上级单位"
               clearable
               @keyup.enter="handleQuery"
@@ -32,7 +32,7 @@
           </el-form-item>
           <el-form-item label="地址" prop="status">
             <el-input
-              v-model="queryParams.username"
+              v-model="queryParams.address"
               placeholder="请输入地址"
               clearable
               @keyup.enter="handleQuery"
@@ -70,34 +70,34 @@
           <el-table-column
             label="单位名称"
             align="center"
-            prop="username"
+            prop="name"
             :show-overflow-tooltip="true"
           />
           <el-table-column
             label="单位简称"
             align="center"
-            prop="nickname"
+            prop="shortName"
             :show-overflow-tooltip="true"
           />
           <el-table-column
             label="设备数量"
             align="center"
-            key="deptName"
-            prop="deptName"
+            key="id"
+            prop="id"
             :show-overflow-tooltip="true"
           />
           <el-table-column
             label="系统数量"
             align="center"
-            key="deptName"
-            prop="deptName"
+            key="id"
+            prop="id"
             :show-overflow-tooltip="true"
           />
           <el-table-column
             label="机房数量"
             align="center"
-            key="deptName"
-            prop="deptName"
+            key="id"
+            prop="id"
             :show-overflow-tooltip="true"
           />
           <el-table-column label="操作" align="center" width="160">
@@ -124,7 +124,7 @@
                 <el-button
                   type="primary"
                   link
-                  @click="checkPermi('update', scope.row.id)"
+                  @click="handleDelete(scope.row.id)"
                   v-hasPermi="['system:user:delete']"
                 >
                   <Icon icon="ep:delete" />删除
@@ -154,7 +154,7 @@ import { checkPermi } from '@/utils/permission'
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { CommonStatusEnum } from '@/utils/constants'
-import * as UserApi from '@/api/system/user'
+import * as UnitApi from '@/api/system/unit'
 
 import UserForm from './components/UnitForm.vue'
 
@@ -170,11 +170,9 @@ const list = ref([]) // 列表的数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  username: undefined,
-  mobile: undefined,
-  status: undefined,
-  deptId: undefined,
-  createTime: []
+  name: undefined,
+  parentId: '',
+  address: '',
 })
 const queryFormRef = ref() // 搜索的表单
 
@@ -182,7 +180,7 @@ const queryFormRef = ref() // 搜索的表单
 const getList = async () => {
   loading.value = true
   try {
-    const data = await UserApi.getUserPage(queryParams)
+    const data = await UnitApi.getUnitPage(queryParams)
     list.value = data.list
     total.value = data.total
   } finally {
@@ -216,7 +214,7 @@ const handleDelete = async (id: number) => {
     // 删除的二次确认
     await message.delConfirm()
     // 发起删除
-    await UserApi.deleteUser(id)
+    await UnitApi.deleteUnit(id)
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
@@ -225,7 +223,7 @@ const handleDelete = async (id: number) => {
 
 /** 批量删除按钮操作 */
 const checkedIds = ref<number[]>([])
-const handleRowCheckboxChange = (rows: UserApi.UserVO[]) => {
+const handleRowCheckboxChange = (rows: UnitApi.UnitVO[]) => {
   checkedIds.value = rows.map((row) => row.id)
 }
 
@@ -234,7 +232,7 @@ const handleDeleteBatch = async () => {
     // 删除的二次确认
     await message.delConfirm()
     // 发起批量删除
-    await UserApi.deleteUserList(checkedIds.value)
+    await UnitApi.deleteUnitList(checkedIds.value)
     checkedIds.value = []
     message.success(t('common.delSuccess'))
     // 刷新列表

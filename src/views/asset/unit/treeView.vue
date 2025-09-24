@@ -24,23 +24,22 @@
               <el-row>
                 <el-col :span="12" :xs="24">
                   <el-form-item label="单位名称：" prop="username">
-                    <h1>单位名称</h1>
+                    <h1>{{ unitInfo.name }}</h1>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12" :xs="24">
                   <el-form-item label="单位简称：" prop="mobile">
-                    <h1>单位简称</h1>
+                   <h1>{{ unitInfo.shortName }}</h1>
                   </el-form-item>
                 </el-col>
-
                 <el-col :span="12" :xs="24">
                   <el-form-item label="上级单位：" prop="mobile">
-                    <h1>上级单位</h1>
+                    <h1>{{ unitInfo.parentId }}</h1>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12" :xs="24">
                   <el-form-item label="单位类型：" prop="mobile">
-                    <h1>单位类型</h1>
+                    <h1>{{ unitInfo.unitType }}</h1>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -79,10 +78,11 @@
 </template>
 <script lang="ts" setup>
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
+import { CACHE_KEY, useCache } from '@/hooks/web/useCache'
 import download from '@/utils/download'
 import { CommonStatusEnum } from '@/utils/constants'
 import * as UserApi from '@/api/system/user'
-import * as unitApi from '@/api/system/unit'
+import * as UnitApi from '@/api/system/unit'
 
 
 import DeptTree from './components/DeptTree.vue'
@@ -96,6 +96,7 @@ defineOptions({ name: 'AssetUnitTreeView' })
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
 const router = useRouter() // 路由
+const { wsCache } = useCache()
 
 const loading = ref(true) // 列表的加载中
 const total = ref(0) // 列表的总页数
@@ -110,6 +111,12 @@ const queryParams = reactive({
   createTime: []
 })
 const queryFormRef = ref() // 搜索的表单
+const unitInfo = ref({
+  name: '',
+  parentId: '',
+  shortName: '',
+  unitType: '',
+})
 
 
 /** 查询列表 */
@@ -131,9 +138,33 @@ const handleDetail = () => {
   })
 }
 
+// 监听 unitInfo 的变化
+watch(unitInfo, (newValue) => {
+  console.log('unitInfo 发生变化:', newValue)
+}, { immediate: true, deep: true })
+
+/** 获取单位信息 */
+const getUnitInfo = async () => {
+  try {
+    const userInfo = wsCache.get(CACHE_KEY.USER)
+    const id = userInfo?.user.id
+
+    if (!id) return
+
+    const data = await UnitApi.getUnitInfo(id)
+    console.log('data', data)
+    unitInfo.value = data
+    console.log('接口返回:', unitInfo.value)
+
+  } catch (error){
+    console.log('获取信息失败', error)
+  }
+}
+
 /** 初始化 */
 onMounted(() => {
   getList()
+  getUnitInfo()
 })
 </script>
 

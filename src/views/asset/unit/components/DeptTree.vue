@@ -1,5 +1,5 @@
 <template>
-  <h1 class="mb-10px">共有多少个单位</h1>
+  <h1 class="mb-10px">共 {{UnitCount}} 个单位</h1>
   <div class="head-container">
     <el-input v-model="deptName" class="mb-20px" clearable placeholder="请输入">
       <template #prefix>
@@ -26,7 +26,7 @@
 import { ElTree } from 'element-plus'
 import * as DeptApi from '@/api/system/dept'
 import * as UnitApi from '@/api/system/unit'
-import { defaultProps, handleTree } from '@/utils/tree'
+import { defaultProps, handleTree3 } from '@/utils/tree'
 import { CACHE_KEY, useCache } from '@/hooks/web/useCache'
 
 defineOptions({ name: 'SystemUserDeptTree' })
@@ -35,19 +35,16 @@ const deptName = ref('')
 const deptList = ref<Tree[]>([]) // 树形结构
 const treeRef = ref<InstanceType<typeof ElTree>>()
 const { wsCache } = useCache()
-
-/** 获取单位信息 */
-const userInfo = wsCache.get(CACHE_KEY.USER)
-const id = userInfo?.user.id
-const getUnitOnfo = async () => {
-  const res = await UnitApi.getUnitInfo(id)
-}
+const UnitCount = ref(0) // 单位总数
 
 /** 获得部门树 */
 const getTree = async () => {
-  const res = await DeptApi.getSimpleDeptList()
+  // const res = await DeptApi.getSimpleDeptList()
+  const res = await UnitApi.getUnitTree()
   deptList.value = []
-  deptList.value.push(...handleTree(res))
+  deptList.value.push(...handleTree3(res))
+
+  console.log(22222222, res)
 }
 
 /** 基于名字过滤 */
@@ -83,9 +80,19 @@ watch(deptName, (val) => {
   treeRef.value!.filter(val)
 })
 
+/** 获取单位总数 */
+const getUnitCount = async () => {
+  try {
+    const data = await UnitApi.getUnitCount()
+    UnitCount.value = data
+  } catch {
+    console.log('error')
+  }
+}
+
 /** 初始化 */
 onMounted(async () => {
   await getTree()
-  await getUnitOnfo()
+  await getUnitCount()
 })
 </script>

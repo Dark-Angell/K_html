@@ -276,6 +276,33 @@ export const handleTree = (data: any[], id?: string, parentId?: string, children
  * 构造树型结构数据
  * @param {*} data 数据源
  * @param {*} id id字段 默认 'id'
+ * @param {*} children 孩子节点字段 默认 'children'
+ */
+export const handleTree3 = (data: any[], id?: string, children?: string) => {
+  if (!Array.isArray(data)) {
+    console.warn('data must be an array')
+    return []
+  }
+  const config = {
+    id: id || 'id',
+    childrenList: children || 'children'
+  }
+
+  // 递归处理每个节点
+  const processNode = (node: any) => {
+    if (node[config.childrenList] && Array.isArray(node[config.childrenList])) {
+      node[config.childrenList] = node[config.childrenList].map(processNode)
+    }
+    return node
+  }
+
+  return data.map(processNode)
+}
+
+/**
+ * 构造树型结构数据
+ * @param {*} data 数据源
+ * @param {*} id id字段 默认 'id'
  * @param {*} parentId 父节点字段 默认 'parentId'
  * @param {*} children 孩子节点字段 默认 'children'
  * @param {*} rootId 根Id 默认 0

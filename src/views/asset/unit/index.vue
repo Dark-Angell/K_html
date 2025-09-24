@@ -38,10 +38,10 @@ defineOptions({ name: 'AssetUnit' })
 
 /** 切换视图 */
 const activeView = ref('tree') // 默认树形视图
-
 const switchView = (viewType) => {
   activeView.value = viewType
 }
+
 </script>
 
 <style scoped lang="scss">
