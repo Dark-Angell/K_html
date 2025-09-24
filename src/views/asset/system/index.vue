@@ -5,7 +5,7 @@
       <el-card shadow="never" class="mb-20px">
         <el-form :model="queryParams" label-width="80px" inline>
           <el-form-item label="系统名称">
-            <el-input v-model="queryParams.name" placeholder="请输入系统名称" clearable />
+            <el-input v-model="queryParams.name" placeholder="请输入系统名称" clearable style="width: 200px;" />
           </el-form-item>
           <el-form-item label="业务类型">
             <el-select
@@ -61,7 +61,11 @@
           </div>
         </template>
 
-        <el-table :data="systemList" style="width: 100%; margin-top: -10px" v-loading="tableLoading">
+        <el-table
+          :data="systemList"
+          style="width: 100%; margin-top: -10px"
+          v-loading="tableLoading"
+        >
           <el-table-column
             v-for="column in visibleColumns"
             :key="column.prop"
@@ -567,44 +571,6 @@ const addFormData = reactive({
 
 // 添加表单验证规则
 const addFormRules: FormRules = {
-  name: [{ required: true, message: '请输入系统名称', trigger: 'blur' }],
-  unit: [{ required: true, message: '请输入所属单位', trigger: 'blur' }]
-}
-
-// 查看/编辑弹窗相关
-const detailDialogVisible = ref(false)
-const dialogMode = ref<'view' | 'edit'>('view')
-const dialogTitle = ref('查看系统资产')
-const detailFormRef = ref<FormInstance>()
-
-// 查看/编辑表单数据
-const detailFormData = reactive({
-  id: 0,
-  name: '', // 系统名称
-  importance: '', // 重要性
-  businessType: '', // 业务类型
-  unit: '', // 所属单位
-  systemType: '', // 系统类型
-  version: '', // 系统版本
-  onlineTime: '', // 上线时间
-  serviceObject: '', // 服务对象
-  userScale: '', // 用户规模
-  isCritical: '', // 是否关机
-  isWebsite: '', // 是否网站类系统
-  isExposed: '', // 是否互联网暴露
-  securityLevel: '', // 等保级别
-  tags: '', // 系统标签
-  ipPorts: '', // IP端口列表
-  screenshot: '', // 系统截图
-  description: '', // 系统描述
-  roomLocation: '', // 机房位置
-  rackLocation: '', // 机柜位置
-  uPosition: '', // U位信息
-  networkArea: '' // 网络区域
-})
-
-// 查看/编辑表单验证规则
-const detailFormRules: FormRules = {
   name: [{ required: true, message: '请输入系统名称', trigger: 'blur' }],
   unit: [{ required: true, message: '请输入所属单位', trigger: 'blur' }]
 }
