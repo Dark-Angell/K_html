@@ -24,22 +24,22 @@
               <el-row>
                 <el-col :span="12" :xs="24">
                   <el-form-item label="单位名称：" prop="username">
-                    <h1>{{ unitInfo.name }}</h1>
+                    {{ unitInfo.name }}
                   </el-form-item>
                 </el-col>
                 <el-col :span="12" :xs="24">
                   <el-form-item label="单位简称：" prop="mobile">
-                   <h1>{{ unitInfo.shortName }}</h1>
+                   {{ unitInfo.shortName }}
                   </el-form-item>
                 </el-col>
                 <el-col :span="12" :xs="24">
                   <el-form-item label="上级单位：" prop="mobile">
-                    <h1>{{ unitInfo.parentId }}</h1>
+                    {{ unitInfo.parentId }}
                   </el-form-item>
                 </el-col>
                 <el-col :span="12" :xs="24">
                   <el-form-item label="单位类型：" prop="mobile">
-                    <h1>{{ unitInfo.unitType }}</h1>
+                    {{ unitInfo.unitType }}
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -138,27 +138,29 @@ const handleDetail = () => {
   })
 }
 
-// 监听 unitInfo 的变化
-watch(unitInfo, (newValue) => {
-  console.log('unitInfo 发生变化:', newValue)
-}, { immediate: true, deep: true })
+/** 获取用户信息 */
+const getUserInfo = () => {
+  return wsCache.get(CACHE_KEY.USER) || null
+}
 
 /** 获取单位信息 */
-const getUnitInfo = async () => {
+const getUnitInfo = async (id?: string | number) => {
+  if (!id) {
+    const userInfo = getUserInfo()
+    id = userInfo?.user.id
+  }
+
   try {
-    const userInfo = wsCache.get(CACHE_KEY.USER)
-    const id = userInfo?.user.id
-
-    if (!id) return
-
-    const data = await UnitApi.getUnitInfo(id)
-    console.log('data', data)
+    const data = await UnitApi.getUnitInfo(id as number)
     unitInfo.value = data
-    console.log('接口返回:', unitInfo.value)
-
   } catch (error){
     console.log('获取信息失败', error)
   }
+}
+
+/** 点击单位切换单位信息 */
+const handleDeptNodeClick = (row) => {
+  getUnitInfo(row.id)
 }
 
 /** 初始化 */
