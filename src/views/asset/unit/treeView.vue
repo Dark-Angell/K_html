@@ -1,7 +1,5 @@
 <template>
-  <el-row :gutter="20">
-
-    <!-- 树形视图 -->
+  <el-row :gutter="20" v-show="!showAddForm">
     <!-- 注释：左侧部门树 -->
     <el-col :span="4" :xs="24">
       <ContentWrap class="h-1/1">
@@ -14,7 +12,7 @@
       <ContentWrap>
         <el-form
           class="-mb-15px"
-          :model="queryParams"
+          :model="unitInfo"
           ref="queryFormRef"
           :inline="true"
           label-width="100px"
@@ -29,7 +27,7 @@
                 </el-col>
                 <el-col :span="12" :xs="24">
                   <el-form-item label="单位简称：" prop="mobile">
-                   {{ unitInfo.shortName }}
+                    {{ unitInfo.shortName }}
                   </el-form-item>
                 </el-col>
                 <el-col :span="12" :xs="24">
@@ -47,7 +45,7 @@
 
             <el-col :span="4" :xs="24">
               <el-form-item>
-                <el-button @click="handleDetail">查看详情</el-button>
+                <el-button @click="handleDetail('view', unitInfo.id)">查看单位详情</el-button>
               </el-form-item>
             </el-col>
           </el-row>
@@ -72,18 +70,15 @@
         </el-tabs>
       </ContentWrap>
     </el-col>
-
   </el-row>
 
+  <ListDetail ref="formRef" v-show="showAddForm" @cancel-add="handleCancelAdd" />
 </template>
 <script lang="ts" setup>
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import { CACHE_KEY, useCache } from '@/hooks/web/useCache'
-import download from '@/utils/download'
-import { CommonStatusEnum } from '@/utils/constants'
 import * as UserApi from '@/api/system/user'
 import * as UnitApi from '@/api/system/unit'
-
 
 import DeptTree from './components/DeptTree.vue'
 import UnitList from './components/unitList.vue' // 注释：设备
@@ -91,51 +86,36 @@ import SystemList from './components/systemList.vue'
 import NetworkList from './components/networkList.vue'
 import MotorRoomList from './components/motorRoomList.vue'
 
+// 控制是否显示添加表单
+const showAddForm = ref(false)
+import ListDetail from './components/listDetail.vue'
+
 defineOptions({ name: 'AssetUnitTreeView' })
 
-const message = useMessage() // 消息弹窗
-const { t } = useI18n() // 国际化
-const router = useRouter() // 路由
 const { wsCache } = useCache()
-
-const loading = ref(true) // 列表的加载中
-const total = ref(0) // 列表的总页数
-const list = ref([]) // 列表的数
-const queryParams = reactive({
-  pageNo: 1,
-  pageSize: 10,
-  username: undefined,
-  mobile: undefined,
-  status: undefined,
-  deptId: undefined,
-  createTime: []
-})
 const queryFormRef = ref() // 搜索的表单
 const unitInfo = ref({
+  id: '',
   name: '',
   parentId: '',
   shortName: '',
-  unitType: '',
+  unitType: ''
 })
 
 
-/** 查询列表 */
-const getList = async () => {
-  loading.value = true
-  try {
-    const data = await UserApi.getUserPage(queryParams)
-    list.value = data.list
-    total.value = data.total
-  } finally {
-    loading.value = false
-  }
+/** 详情操作 */
+const formRef = ref()
+const emit = defineEmits(['form-status-change'])
+const handleDetail = (type, id) => {
+  formRef.value.open(type, id)
+  showAddForm.value = true
+  emit('form-status-change', true)
 }
 
-/** 详情操作 */
-const handleDetail = () => {
-  router.push({
-    name: 'UnitDetail',
-  })
+/** 关闭表单 */
+const handleCancelAdd = () => {
+  showAddForm.value = false
+  emit('form-status-change', false)
 }
 
 /** 获取用户信息 */
@@ -153,19 +133,18 @@ const getUnitInfo = async (id?: string | number) => {
   try {
     const data = await UnitApi.getUnitInfo(id as number)
     unitInfo.value = data
-  } catch (error){
+  } catch (error) {
     console.log('获取信息失败', error)
   }
 }
 
 /** 点击单位切换单位信息 */
-const handleDeptNodeClick = (row) => {
+const handleDeptNodeClick = (row: any) => {
   getUnitInfo(row.id)
 }
 
 /** 初始化 */
 onMounted(() => {
-  getList()
   getUnitInfo()
 })
 </script>

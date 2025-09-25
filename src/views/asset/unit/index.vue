@@ -1,32 +1,36 @@
 <template>
-  <el-row :gutter="20">
-    <div class="view-switch-container">
-      <div class="view-switch">
-        <div
-          class="view-item"
-          :class="{ active: activeView === 'tree' }"
-          @click="switchView('tree')"
-        >
-          树形视图
-        </div>
-        <div
-          class="view-item"
-          :class="{ active: activeView === 'list' }"
-          @click="switchView('list')"
-        >
-          列表视图
+  <el-card shadow="never" class="mb-20px" v-if="!showForm">
+    <!-- 顶部操作按钮 -->
+    <div style="display: flex; justify-content: space-between; cursor: pointer">
+      <span></span>
+      <div class="view-switch-container">
+        <div class="view-switch">
+          <div
+            class="view-item"
+            :class="{ active: activeView === 'tree' }"
+            @click="switchView('tree')"
+          >
+            树形视图
+          </div>
+          <div
+            class="view-item"
+            :class="{ active: activeView === 'list' }"
+            @click="switchView('list')"
+          >
+            列表视图
+          </div>
         </div>
       </div>
     </div>
+  </el-card>
 
-    <template v-if="activeView === 'tree'">
-      <TreeView />
-    </template>
+  <template v-if="activeView === 'tree'">
+    <TreeView @form-status-change="handleFormStatusChange" />
+  </template>
 
-    <template v-if="activeView === 'list'">
-      <listView />
-    </template>
-  </el-row>
+  <template v-if="activeView === 'list'">
+    <listView @form-status-change="handleFormStatusChange" />
+  </template>
 </template>
 
 <script lang="ts" setup>
@@ -42,15 +46,14 @@ const switchView = (viewType) => {
   activeView.value = viewType
 }
 
+/** 显示 新增/编辑/详情 */
+const showForm = ref(false)
+const handleFormStatusChange = (isShow) => {
+  showForm.value = isShow
+}
 </script>
 
 <style scoped lang="scss">
-.view-switch-container {
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-  margin-bottom: 20px;
-}
 .view-switch {
   display: flex;
   border: 1px solid #dcdfe6;

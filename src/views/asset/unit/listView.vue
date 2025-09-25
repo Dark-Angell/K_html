@@ -1,5 +1,5 @@
 <template>
-  <el-row :gutter="20">
+  <el-row :gutter="20" v-show="!showAddForm">
 
     <!-- 列表视图 -->
     <el-col :span="24" :xs="24">
@@ -21,7 +21,7 @@
               class="!w-240px"
             />
           </el-form-item>
-          <el-form-item label="上级单位" prop="status">
+          <el-form-item label="上级单位" prop="parentId">
             <el-input
               v-model="queryParams.parentId"
               placeholder="请输入上级单位"
@@ -30,7 +30,7 @@
               class="!w-240px"
             />
           </el-form-item>
-          <el-form-item label="地址" prop="status">
+          <el-form-item label="地址" prop="address">
             <el-input
               v-model="queryParams.address"
               placeholder="请输入地址"
@@ -45,7 +45,7 @@
             <el-button
               type="primary"
               plain
-              @click="openForm('create')"
+              @click="addUnitForm('add')"
               v-hasPermi="['system:user:create']"
             >
               <Icon icon="ep:plus" /> 新增
@@ -100,22 +100,21 @@
             prop="id"
             :show-overflow-tooltip="true"
           />
-          <el-table-column label="操作" align="center" width="160">
+          <el-table-column label="操作" align="center" width="180">
             <template #default="scope">
               <div class="flex items-center justify-center">
                 <el-button
                   type="primary"
                   link
-                  @click="openForm('update', scope.row.id)"
-                  v-hasPermi="['system:user:update']"
+                  @click="viewUnitForm('view', scope.row.id)"
                 >
-                  <Icon icon="ep:edit" />详情
+                  <Icon icon="ep:view" />详情
                 </el-button>
 
                 <el-button
                   type="primary"
                   link
-                  @click="openForm('update', scope.row.id)"
+                  @click="editUnitForm('edit', scope.row.id)"
                   v-hasPermi="['system:user:update']"
                 >
                   <Icon icon="ep:edit" />修改
@@ -144,8 +143,12 @@
     </el-col>
   </el-row>
 
-  <!-- 添加或修改单位对话框 -->
-  <UserForm ref="formRef" @success="getList" />
+  <ListDetail 
+    ref="formRef" 
+    v-show="showAddForm" 
+    @cancel-add="handleCancelAdd"
+    @submit-success="handleSubmitSuccess" 
+  />
 
 </template>
 <script lang="ts" setup>
@@ -154,13 +157,12 @@ import { checkPermi } from '@/utils/permission'
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { CommonStatusEnum } from '@/utils/constants'
+import ListDetail from './components/listDetail.vue'
 import * as UnitApi from '@/api/system/unit'
-
-import UserForm from './components/UnitForm.vue'
-
 
 defineOptions({ name: 'AssetUnitListView' })
 
+const showAddForm = ref(false) // 控制是否显示添加表单
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
 
@@ -170,7 +172,7 @@ const list = ref([]) // 列表的数
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
-  name: undefined,
+  name: '',
   parentId: '',
   address: '',
 })
@@ -200,11 +202,39 @@ const resetQuery = () => {
   handleQuery()
 }
 
-
-/** 添加/修改操作 */
+/** 添加 */
 const formRef = ref()
-const openForm = (type: string, id?: number) => {
+const emit = defineEmits(['form-status-change'])
+const addUnitForm = (type: string, id?: number) => {
   formRef.value.open(type, id)
+  showAddForm.value = true
+  emit('form-status-change', true)
+}
+
+/** 编辑 */
+const editUnitForm = (type: string, id?: number) => {
+  formRef.value.open(type, id)
+  showAddForm.value = true
+  emit('form-status-change', true)
+}
+
+/** 查看 */
+const viewUnitForm = (type: string, id?: number) => {
+  formRef.value.open(type, id)
+  showAddForm.value = true
+  emit('form-status-change', true)
+}
+
+const handleCancelAdd = () => {
+  showAddForm.value = false
+  emit('form-status-change', false)
+}
+
+/** 处理提交成功 */
+const handleSubmitSuccess = async () => {
+  showAddForm.value = false
+  emit('form-status-change', false)
+  await getList()
 }
 
 

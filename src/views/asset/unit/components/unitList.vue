@@ -63,7 +63,7 @@
               @click="handleDetail(scope.row)"
               v-hasPermi="['system:user:update']"
             >
-              <Icon icon="ep:edit" />详情
+              <Icon icon="ep:view" />详情
             </el-button>
           </div>
         </template>
@@ -81,7 +81,6 @@
 
   <!-- 表单弹窗：添加/修改 -->
   <DetailForm ref="formRef" @success="getList" />
-
 </template>
 <script setup lang="ts">
 import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
@@ -136,6 +135,7 @@ const getList = async () => {
 
     list.value = [
       {
+        id: 1,
         username: '222',
         age: 2222
       }
